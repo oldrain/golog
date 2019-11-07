@@ -20,12 +20,12 @@ type ConsoleLog struct {
 var (
 	// Colorful characters
 	consoleLevelStrMap = map[int]string{
-		LevelFatal: "\033[35m[FATAL]\033[0m",
-		LevelError: "\033[31m[ERROR]\033[0m",
-		LevelWarn: "\033[33m[WARN]\033[0m",
-		LevelInfo: "\033[32m[INFO]\033[0m",
-		LevelDebug: "\033[36m[DEBUG]\033[0m",
-		LevelTrace: "\033[34m[TRACE]\033[0m",
+		LevelFatal: "\033[35mFATAL\033[0m",
+		LevelError: "\033[31mERROR\033[0m",
+		LevelWarn: "\033[33mWARN\033[0m",
+		LevelInfo: "\033[32mINFO\033[0m",
+		LevelDebug: "\033[36mDEBUG\033[0m",
+		LevelTrace: "\033[34mTRACE\033[0m",
 	}
 )
 
@@ -104,5 +104,5 @@ func (logger *ConsoleLog) formatConsoleLogStr(module string, level int, args ...
 	if _, ok := consoleLevelStrMap[level]; ok {
 		levelStr = consoleLevelStrMap[level]
 	}
-	return fmt.Sprintf("%s [%s] %s %s", time.Now().Format(TimeLayout), module, levelStr, fmt.Sprint(args...))
+	return fmt.Sprintf("\033[33m%s\033[0m \033[36m%s\033[0m %s %s", time.Now().Format(TimeLayout), module, levelStr, fmt.Sprint(args...))
 }
