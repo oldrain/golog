@@ -2,7 +2,7 @@
 A simple logger, small but enough
 
 
-## Install
+## Installation
 
 > Use go get
 
