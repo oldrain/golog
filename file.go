@@ -1,3 +1,6 @@
+// Copyright 2019 golog Author. All Rights Reserved.
+// License that can be found in the LICENSE file.
+
 package golog
 
 import (
@@ -27,6 +30,9 @@ type FileLog struct {
 	writeCount int           //Number of log records waiting for write
 	mutexBuff  *sync.Mutex   //Buffer mutex
 	buff       *bytes.Buffer //Write buffer
+
+	head string
+	tail string
 }
 
 func (logger *FileLog) start() {
@@ -63,6 +69,27 @@ func (logger *FileLog) start() {
 			}
 		}()
 	}
+}
+
+func (logger *FileLog) AppendHead(args ...interface{}) {
+	logger.setHead(logger.append(logger.head, args...))
+}
+
+func (logger *FileLog) AppendTail(args ...interface{}) {
+	logger.setTail(logger.append(logger.tail, args...))
+}
+
+func (logger *FileLog) EraseHead() {
+	logger.setHead(EmptyString)
+}
+
+func (logger *FileLog) EraseTail() {
+	logger.setTail(EmptyString)
+}
+
+func (logger *FileLog) Erase() {
+	logger.EraseHead()
+	logger.EraseTail()
 }
 
 func (logger *FileLog) Trace(args ...interface{}) {
@@ -106,7 +133,7 @@ func (logger *FileLog) logging(level int, args ...interface{}) {
 		}
 	}()
 
-	logStr := formatLogStr(logger.module, level, args...)
+	logStr := formatLogStr(logger.module, level, logger.head, args, logger.tail)
 
 	// Write to buffer
 	logger.mutexBuff.Lock()
@@ -202,4 +229,16 @@ func (logger *FileLog) newFilePath() string {
 	} else {
 		return fmt.Sprintf("%s/%s/%s%s", logger.cfg.path, time.Now().Format(DateLayout), logger.module, FileExt)
 	}
+}
+
+func (logger *FileLog) append(s string, args ...interface{}) string {
+	return fmt.Sprintf("%s%s", s, fmt.Sprint(args...))
+}
+
+func (logger *FileLog) setHead(args ...interface{}) {
+	logger.head = fmt.Sprintf("%s", fmt.Sprint(args...))
+}
+
+func (logger *FileLog) setTail(args ...interface{}) {
+	logger.tail = fmt.Sprintf("%s", fmt.Sprint(args...))
 }

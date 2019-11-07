@@ -1,3 +1,6 @@
+// Copyright 2019 golog Author. All Rights Reserved.
+// License that can be found in the LICENSE file.
+
 package golog
 
 import (
@@ -50,9 +53,17 @@ const (
 
 	DateLayout = "2006-01-02"
 	TimeLayout = "2006-01-02 15:04:05"
+
+	EmptyString = ""
 )
 
 type Logger interface {
+	AppendHead(args ...interface{})
+	AppendTail(args ...interface{})
+	EraseHead()
+	EraseTail()
+	Erase()
+
 	Trace(args ...interface{})
 	Debug(args ...interface{})
 	Info(args ...interface{})

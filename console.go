@@ -1,3 +1,6 @@
+// Copyright 2019 golog Author. All Rights Reserved.
+// License that can be found in the LICENSE file.
+
 package golog
 
 import (
@@ -9,6 +12,9 @@ import (
 type ConsoleLog struct {
 	cfg *Config
 	module string
+
+	head string
+	tail string
 }
 
 var (
@@ -25,6 +31,27 @@ var (
 
 func (logger *ConsoleLog) start() {
 	// do nothing
+}
+
+func (logger *ConsoleLog) AppendHead(args ...interface{}) {
+	logger.setHead(logger.append(logger.head, args...))
+}
+
+func (logger *ConsoleLog) AppendTail(args ...interface{}) {
+	logger.setTail(logger.append(logger.tail, args...))
+}
+
+func (logger *ConsoleLog) EraseHead() {
+	logger.setHead(EmptyString)
+}
+
+func (logger *ConsoleLog) EraseTail() {
+	logger.setTail(EmptyString)
+}
+
+func (logger *ConsoleLog) Erase() {
+	logger.EraseHead()
+	logger.EraseTail()
 }
 
 func (logger *ConsoleLog) Trace(args ...interface{}) {
@@ -56,7 +83,19 @@ func (logger *ConsoleLog) logging(level int, args ... interface{}) {
 	if level > logger.cfg.level {
 		return
 	}
-	fmt.Println(logger.formatConsoleLogStr(logger.module, level, args...))
+	fmt.Println(logger.formatConsoleLogStr(logger.module, level, logger.head, args, logger.tail))
+}
+
+func (logger *ConsoleLog) append(s string, args ...interface{}) string {
+	return fmt.Sprintf("%s%s", s, fmt.Sprint(args...))
+}
+
+func (logger *ConsoleLog) setHead(args ...interface{}) {
+	logger.head = fmt.Sprintf("%s", fmt.Sprint(args...))
+}
+
+func (logger *ConsoleLog) setTail(args ...interface{}) {
+	logger.tail = fmt.Sprintf("%s", fmt.Sprint(args...))
 }
 
 // Logging string

@@ -1,3 +1,6 @@
+// Copyright 2019 golog Author. All Rights Reserved.
+// License that can be found in the LICENSE file.
+
 package golog
 
 import (
@@ -142,4 +145,60 @@ func Test_LoggerSameModule(t *testing.T) {
 	if loggerA != loggerB {
 		t.Error("Not the same")
 	}
+}
+
+func Test_LoggerAppend(t *testing.T) {
+	// console
+	config1 := new(Config)
+	config1.SetLevel(LevelInfo)
+	SetLogMode(ModeConsole)
+	SetGlobalConfig(config1)
+	logger1 := GetLogger("consoleAppend")
+	logger1.AppendHead("[")
+	logger1.AppendHead("head")
+	logger1.AppendHead("]")
+	logger1.AppendTail("[")
+	logger1.AppendTail("tail")
+	logger1.AppendTail("]")
+	logger1.Trace("trace console")
+	logger1.Debug("debug console")
+	logger1.Info("info console")
+	logger1.Warn("warn console")
+	logger1.Error("error console")
+	logger1.Fatal("fatal console")
+	logger1.Erase()
+	logger1.Trace("trace console")
+	logger1.Debug("debug console")
+	logger1.Info("info console")
+	logger1.Warn("warn console")
+	logger1.Error("error console")
+	logger1.Fatal("fatal console")
+
+	// file, date
+	config2 := new(Config)
+	config2.SetLevel(LevelInfo)
+	config2.SetPath("logs")
+	config2.SetRotate(RotateDate)
+	SetLogMode(ModeFile)
+	SetGlobalConfig(config2)
+	logger2 := GetLogger("fileDateAppend")
+	logger2.AppendHead("[")
+	logger2.AppendHead("head")
+	logger2.AppendHead("]")
+	logger2.AppendTail("[")
+	logger2.AppendTail("tail")
+	logger2.AppendTail("]")
+	logger2.Trace("trace console")
+	logger2.Debug("debug console")
+	logger2.Info("info console")
+	logger2.Warn("warn console")
+	logger2.Error("error console")
+	logger2.Fatal("fatal console")
+	logger2.Erase()
+	logger2.Trace("trace console")
+	logger2.Debug("debug console")
+	logger2.Info("info console")
+	logger2.Warn("warn console")
+	logger2.Error("error console")
+	logger2.Fatal("fatal console")
 }
