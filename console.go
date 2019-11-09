@@ -6,6 +6,7 @@ package golog
 import (
 	"fmt"
 	"time"
+	"log"
 )
 
 // Console output
@@ -83,7 +84,8 @@ func (logger *ConsoleLog) logging(level int, args ... interface{}) {
 	if level > logger.cfg.level {
 		return
 	}
-	fmt.Println(logger.formatConsoleLogStr(logger.module, level, logger.head, args, logger.tail))
+	log.SetFlags(0)
+	log.Println(logger.formatConsoleLogStr(logger.module, level, logger.head, args, logger.tail))
 }
 
 func (logger *ConsoleLog) append(s string, args ...interface{}) string {
